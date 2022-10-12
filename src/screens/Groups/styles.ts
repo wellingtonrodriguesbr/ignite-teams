@@ -10,4 +10,5 @@ export const Container = styled.View`
 export const Text = styled.Text`
   font-size: 40px;
   color: ${(props) => props.theme.COLORS.GREEN_500};
+  font-family: ${(props) => props.theme.FONT_FAMILY.BOLD};
 `;
