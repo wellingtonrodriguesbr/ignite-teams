@@ -8,7 +8,7 @@ import { Groups } from "@screens/Groups";
 import { NewGroup } from "@screens/NewGroup";
 import { Players } from "@screens/Players";
 import { StatusBar } from "react-native";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from "styled-components/native";
 import theme from "./src/theme";
 
 export default function App() {
