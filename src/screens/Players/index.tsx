@@ -1,11 +1,19 @@
+import { Button } from "@components/Button";
 import { ButtonIcon } from "@components/ButtonIcon";
 import { Filter } from "@components/Filter";
 import { Header } from "@components/Header";
 import { Highlight } from "@components/Highlight";
 import { Input } from "@components/Input";
-import { Form, PlayersContainer } from "./styles";
+import { ListEmpty } from "@components/ListEmpty";
+import { PlayerCard } from "@components/PlayerCard";
+import { useState } from "react";
+import { FlatList } from "react-native";
+import { Form, HeaderList, NumberOfPlayers, PlayersContainer } from "./styles";
 
 export function Players() {
+  const [teamSeletected, setTeamSelected] = useState("Time A");
+  const [players, setPlayers] = useState([]);
+
   return (
     <PlayersContainer>
       <Header showBackButton />
@@ -17,8 +25,37 @@ export function Players() {
         <Input placeholder="Nome do jogador" autoCorrect={false} />
         <ButtonIcon icon="add" />
       </Form>
-
-      <Filter title="Time A" />
+      <HeaderList>
+        <FlatList
+          data={["Time A", "Time B"]}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <Filter
+              title={item}
+              isActive={item === teamSeletected}
+              onPress={() => setTeamSelected(item)}
+            />
+          )}
+          horizontal
+        />
+        <NumberOfPlayers>{players.length}</NumberOfPlayers>
+      </HeaderList>
+      <FlatList
+        data={players}
+        keyExtractor={(item) => item}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          { paddingBottom: 100 },
+          players.length === 0 && { flex: 1 },
+        ]}
+        renderItem={({ item }) => (
+          <PlayerCard name={item} onRemove={() => {}} />
+        )}
+        ListEmptyComponent={() => (
+          <ListEmpty message="Nenhum jogador nesse time." />
+        )}
+      />
+      <Button text="Remover turma" type="secondary" />
     </PlayersContainer>
   );
 }
