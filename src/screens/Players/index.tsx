@@ -6,7 +6,8 @@ import { Highlight } from "@components/Highlight";
 import { Input } from "@components/Input";
 import { ListEmpty } from "@components/ListEmpty";
 import { PlayerCard } from "@components/PlayerCard";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { removeGroupByName } from "@storage/group/removeGroupByName";
 import { addPlayerByGroup } from "@storage/player/addPlayerByGroup";
 import { getPlayerByGroupAndTeam } from "@storage/player/getPlayerByGroupAndTeam";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
@@ -24,6 +25,7 @@ export function Players() {
   const [teamSeletected, setTeamSelected] = useState("Time A");
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const { navigate } = useNavigation();
 
   const newPlayerNameInputRef = useRef<TextInput>(null);
 
@@ -66,6 +68,28 @@ export function Players() {
     } catch (error) {
       Alert.alert("Remover jogador", "Falha ao remover jogador!");
     }
+  }
+
+  async function removeGroup() {
+    try {
+      await removeGroupByName(group);
+      navigate("groups");
+    } catch (error) {
+      Alert.alert("Remover turma", "Não foi possível remover essa turma!");
+    }
+  }
+
+  async function handleRemoveGroup() {
+    Alert.alert("Remover turma", "Tem certeza que deseja remover essa turma?", [
+      {
+        text: "Não",
+        style: "cancel",
+      },
+      {
+        text: "Sim, remover",
+        onPress: () => removeGroup(),
+      },
+    ]);
   }
 
   async function fetchPlayersByTeam() {
@@ -134,7 +158,11 @@ export function Players() {
           <ListEmpty message="Nenhum jogador nesse time." />
         )}
       />
-      <Button text="Remover turma" type="secondary" />
+      <Button
+        text="Remover turma"
+        type="secondary"
+        onPress={handleRemoveGroup}
+      />
     </PlayersContainer>
   );
 }
