@@ -10,6 +10,7 @@ import { useRoute } from "@react-navigation/native";
 import { addPlayerByGroup } from "@storage/player/addPlayerByGroup";
 import { getPlayerByGroupAndTeam } from "@storage/player/getPlayerByGroupAndTeam";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
+import { removePlayerByGroup } from "@storage/player/removePlayerByGroup";
 import { AppError } from "@utils/AppError";
 import { useEffect, useState, useRef } from "react";
 import { Alert, FlatList, TextInput } from "react-native";
@@ -58,9 +59,13 @@ export function Players() {
     }
   }
 
-  function handleRemovePlayer(player: string) {
-    const filteredPlayers = players.filter((p) => p.name !== player);
-    setPlayers(filteredPlayers);
+  async function handleRemovePlayer(playerName: string) {
+    try {
+      await removePlayerByGroup(playerName, group);
+      fetchPlayersByTeam();
+    } catch (error) {
+      Alert.alert("Remover jogador", "Falha ao remover jogador!");
+    }
   }
 
   async function fetchPlayersByTeam() {
